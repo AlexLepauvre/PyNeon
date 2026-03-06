@@ -1,0 +1,749 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Scene Video and Scanpath Mapping &#8212; PyNeon dev documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../_static/nbsphinx-code-cells.css?v=2aa19091" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="../_static/documentation_options.js?v=3ce10a4d"></script>
+    <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'tutorials/video';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Exporting to BIDS Formats" href="export_to_bids.html" />
+    <link rel="prev" title="Surface Mapping Using Fiducial Markers and Screen Corners" href="surface_mapping.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">PyNeon dev documentation</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="index.html">
+    Tutorials
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../reference/index.html">
+    API reference
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/ncc-brain/PyNeon" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="index.html">
+    Tutorials
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../reference/index.html">
+    API reference
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/ncc-brain/PyNeon" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+<nav class="bd-docs-nav bd-links"
+     aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="read_recording_cloud.html">Reading Pupil Cloud-Format Recordings</a></li>
+<li class="toctree-l1"><a class="reference internal" href="read_recording_native.html">Reading Native-Format Recordings</a></li>
+<li class="toctree-l1"><a class="reference internal" href="interpolate_and_concat.html">Preprocessing: Cropping, Interpolation, and Concatenation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pupil_size_and_epoching.html">Processing and Epoching Pupil Size Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="surface_mapping.html">Surface Mapping Using Fiducial Markers and Screen Corners</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Scene Video and Scanpath Mapping</a></li>
+<li class="toctree-l1"><a class="reference internal" href="export_to_bids.html">Exporting to BIDS Formats</a></li>
+</ul>
+</div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="index.html" class="nav-link">PyNeon Tutorials</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Scene Video and Scanpath Mapping</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="Scene-Video-and-Scanpath-Mapping">
+<h1>Scene Video and Scanpath Mapping<a class="headerlink" href="#Scene-Video-and-Scanpath-Mapping" title="Link to this heading">#</a></h1>
+<p>In this tutorial, we will map gaze data from an eye-tracking recording to video frames, estimate a scanpath, and overlay the gaze fixations on the video. We will use the <code class="docutils literal notranslate"><span class="pre">pyneon</span></code> library to work with Neon eye-tracking recordings, which contain video and event data, including gaze information.</p>
+<hr class="docutils" />
+<section id="Setup:-Loading-a-Neon-Recording">
+<h2>Setup: Loading a Neon Recording<a class="headerlink" href="#Setup:-Loading-a-Neon-Recording" title="Link to this heading">#</a></h2>
+<p>First, we load the Neon recording, which contains video and gaze data. Ensure that you have installed the required libraries such as <code class="docutils literal notranslate"><span class="pre">pyneon</span></code> and have the recording dataset available.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Import necessary libraries</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyneon</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dataset</span><span class="p">,</span> <span class="n">get_sample_data</span>
+
+<span class="c1"># Download sample data (if not existing) and return the path</span>
+<span class="n">sample_dir</span> <span class="o">=</span> <span class="n">get_sample_data</span><span class="p">(</span><span class="s2">&quot;Artworks&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">sample_dir</span><span class="p">)</span>
+
+<span class="n">dataset_dir</span> <span class="o">=</span> <span class="n">sample_dir</span> <span class="o">/</span> <span class="s2">&quot;Timeseries Data + Scene Video&quot;</span>
+<span class="n">dataset</span> <span class="o">=</span> <span class="n">Dataset</span><span class="p">(</span><span class="n">dataset_dir</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">dataset</span><span class="p">)</span>
+
+<span class="n">recording</span> <span class="o">=</span> <span class="n">dataset</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">recording</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+C:\Users\jan-gabriel.hartel\Documents\GitHub\PyNeon\data\Artworks
+Dataset | 1 recordings
+
+Recording ID: 9a141750-95ca-48ee-9693-53bbb896b87e
+Wearer ID: c4f68887-e96c-467f-a901-0fc9fce09c0a
+Wearer name: JGH
+Recording start time: 2025-06-16 12:49:27.817000
+Recording duration: 357.538s
+                 exist                  filename                                                                                                                                        path
+3d_eye_states     True         3d_eye_states.csv         C:\Users\jan-gabriel.hartel\Documents\GitHub\PyNeon\data\Artworks\Timeseries Data + Scene Video\artworks-9a141750\3d_eye_states.csv
+blinks            True                blinks.csv                C:\Users\jan-gabriel.hartel\Documents\GitHub\PyNeon\data\Artworks\Timeseries Data + Scene Video\artworks-9a141750\blinks.csv
+events            True                events.csv                C:\Users\jan-gabriel.hartel\Documents\GitHub\PyNeon\data\Artworks\Timeseries Data + Scene Video\artworks-9a141750\events.csv
+fixations         True             fixations.csv             C:\Users\jan-gabriel.hartel\Documents\GitHub\PyNeon\data\Artworks\Timeseries Data + Scene Video\artworks-9a141750\fixations.csv
+gaze              True                  gaze.csv                  C:\Users\jan-gabriel.hartel\Documents\GitHub\PyNeon\data\Artworks\Timeseries Data + Scene Video\artworks-9a141750\gaze.csv
+imu               True                   imu.csv                   C:\Users\jan-gabriel.hartel\Documents\GitHub\PyNeon\data\Artworks\Timeseries Data + Scene Video\artworks-9a141750\imu.csv
+labels            True                labels.csv                C:\Users\jan-gabriel.hartel\Documents\GitHub\PyNeon\data\Artworks\Timeseries Data + Scene Video\artworks-9a141750\labels.csv
+saccades          True              saccades.csv              C:\Users\jan-gabriel.hartel\Documents\GitHub\PyNeon\data\Artworks\Timeseries Data + Scene Video\artworks-9a141750\saccades.csv
+world_timestamps  True      world_timestamps.csv      C:\Users\jan-gabriel.hartel\Documents\GitHub\PyNeon\data\Artworks\Timeseries Data + Scene Video\artworks-9a141750\world_timestamps.csv
+scene_video_info  True         scene_camera.json         C:\Users\jan-gabriel.hartel\Documents\GitHub\PyNeon\data\Artworks\Timeseries Data + Scene Video\artworks-9a141750\scene_camera.json
+scene_video       True  11f35cc2_0.0-357.538.mp4  C:\Users\jan-gabriel.hartel\Documents\GitHub\PyNeon\data\Artworks\Timeseries Data + Scene Video\artworks-9a141750\11f35cc2_0.0-357.538.mp4
+
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">av</span>
+
+<span class="n">container</span> <span class="o">=</span> <span class="n">av</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">recording</span><span class="o">.</span><span class="n">video</span><span class="o">.</span><span class="n">video_file</span><span class="p">)</span>
+<span class="n">audio_stream</span> <span class="o">=</span> <span class="n">container</span><span class="o">.</span><span class="n">streams</span><span class="o">.</span><span class="n">audio</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">audio_stream</span><span class="o">.</span><span class="n">rate</span><span class="p">)</span>  <span class="c1"># ← sampling rate</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+44100
+</pre></div></div>
+</div>
+</section>
+<hr class="docutils" />
+<section id="Mapping-Gaze-Data-to-Video-Frames">
+<h2>Mapping Gaze Data to Video Frames<a class="headerlink" href="#Mapping-Gaze-Data-to-Video-Frames" title="Link to this heading">#</a></h2>
+<p>In Neon recordings, gaze events are not naturally synchronized with the video. To map gaze data to specific video frames, we can use the <code class="docutils literal notranslate"><span class="pre">map_gaze_to_video</span></code> method. This method requires the <code class="docutils literal notranslate"><span class="pre">pyneon.video</span></code> object for determination of video timestamps, the <code class="docutils literal notranslate"><span class="pre">pyneon.fixations</span></code> object to make use of PupilLabs fixation detection pipeline and the <code class="docutils literal notranslate"><span class="pre">pyneon.gaze</span></code> object for improved time resolution of gaze estimation.</p>
+<p>By default, Neon reports fixations with a single coordinate. This is computed as average between all gaze coordinates over the interval denoted as a fixation. However, this clashes with the functional definition of a fixation as <em>tracking a fixed point in space</em>, used by Neon.</p>
+<p>Imagine looking at a fixed point, for example a street sign, while you are walking past it. Despite the movement of your body and the relative movement of the sign, the fixation will be stabilized. As such, taking an average gaze coordinate over the entire duration will not correspond to the location of the sign, or the fixation, at any given point in time. Feeding this point into an optical flow algorithm would, with high likelihood, lead to tracking anything but the sign.</p>
+<p>Therefore, we use partial averages of gaze locations around the respective frame’s timestamp. As the video is sampled at 30Hz while the gaze output nominally reaches 200Hz, we expect to take the average over 6 subsequent gaze points. This achieves a trade-off between recency of the reported gaze position at the given frame and error minimization, by averaging over microsaccades around the actual fixation target as well as random errors.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Map gaze data to the video timestamps</span>
+<span class="n">synced_gaze</span> <span class="o">=</span> <span class="n">recording</span><span class="o">.</span><span class="n">sync_gaze_to_video</span><span class="p">(</span><span class="n">overwrite</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="c1"># Inspect the mapped gaze data</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">synced_gaze</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">tail</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+                     gaze x [px]  gaze y [px]  worn  fixation id  blink id  \
+timestamp [ns]
+1750071325151422222          NaN          NaN  &lt;NA&gt;         &lt;NA&gt;      &lt;NA&gt;
+1750071325201422222          NaN          NaN  &lt;NA&gt;         &lt;NA&gt;      &lt;NA&gt;
+1750071325251422222          NaN          NaN  &lt;NA&gt;         &lt;NA&gt;      &lt;NA&gt;
+1750071325301422222          NaN          NaN  &lt;NA&gt;         &lt;NA&gt;      &lt;NA&gt;
+1750071325351422222          NaN          NaN  &lt;NA&gt;         &lt;NA&gt;      &lt;NA&gt;
+
+                     azimuth [deg]  elevation [deg]  frame_idx
+timestamp [ns]
+1750071325151422222            NaN              NaN      10690
+1750071325201422222            NaN              NaN      10691
+1750071325251422222            NaN              NaN      10692
+1750071325301422222            NaN              NaN      10693
+1750071325351422222            NaN              NaN      10694
+</pre></div></div>
+</div>
+<p>Above, we can see that each frame gets a current gaze position as well as a fixation status. Currently, three types of fixation status are used:</p>
+<ol class="arabic simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">start</span></code> denoting the first frame corresponding to a fixation</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">during</span></code> corresponding to intermediate frames of the same fixation</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">end</span></code> denoting the last frame of the fixation</p></li>
+</ol>
+<p>This determination will become relevant for tracking the scanpath with optical flow. After all, while a fixation is still active, we get up-to-date gaze information. Only after its end, tracking becomes necessary.</p>
+</section>
+<hr class="docutils" />
+<section id="3.-Estimating-the-Scanpath">
+<h2>3. Estimating the Scanpath<a class="headerlink" href="#3.-Estimating-the-Scanpath" title="Link to this heading">#</a></h2>
+<p>Having matched every frame with a gaze coordinate, we can now get into the meat of the scanpath estimation. In dynamic scenes, the same object will not occupy the same scene-camera location over time. Therefore, we need to continuously map past fixation points as long as they are still visible in the frame.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">estimate_scanpath</span></code> method achieves this by feeding fixation point denoted as <code class="docutils literal notranslate"><span class="pre">end</span></code> into a Lucas-Kanade sparse optical flow algorithm. This algorithm compares the video in vicinity of the point with the subsequent frame, updating the location in dependence of its movement. While a point is tracked, its status is flagged as <code class="docutils literal notranslate"><span class="pre">tracked</span></code>. In practice, many scene frames will have multiple simultaneously present past fixations. Our implementation carries them and repeately performs an optical
+flow estimation for each point. Only when they can no longer be tracked, will they be flagged as <code class="docutils literal notranslate"><span class="pre">lost</span></code> and subsequently dropped for the next frame.</p>
+<p>It should be noted that this algorithm is not optimised for performance and that it will take a considerable amount of time to run on limited hardware. For our computers, the algorithm takes roughly half the time of the video, though this benchmark heavily depends on the density of past fixation points and computational ressources</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Estimate the scanpath based on the mapped gaze data</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyneon.video</span><span class="w"> </span><span class="kn">import</span> <span class="n">estimate_scanpath</span>
+
+<span class="n">scanpath_df</span> <span class="o">=</span> <span class="n">estimate_scanpath</span><span class="p">(</span><span class="n">recording</span><span class="o">.</span><span class="n">scene_video</span><span class="p">,</span> <span class="n">synced_gaze</span><span class="p">)</span>
+<span class="n">scanpath_df</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;timestamp [ns]&quot;</span>
+<span class="n">scanpath</span> <span class="o">=</span> <span class="n">Stream</span><span class="p">(</span><span class="n">scanpath_df</span><span class="p">)</span>
+
+<span class="c1"># Inspect the estimated scanpath</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">scanpath</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">head</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Loading saved scanpath from C:\Users\jan-gabriel.hartel\Documents\GitHub\PyNeon\data\Artworks\Timeseries Data + Scene Video\artworks-9a141750\derivatives\scanpath.pkl
+                                                             fixations  \
+timestamp [ns]
+1750070967817000000    fixation id gaze x [px] gaze y [px] fixation...
+1750070967867000000    fixation id gaze x [px] gaze y [px] fixation...
+1750070967917000000    fixation id gaze x [px] gaze y [px] fixation...
+1750070967967000000    fixation id gaze x [px] gaze y [px] fixation...
+1750070968017000000    fixation id gaze x [px] gaze y [px] fixation...
+
+                     frame_idx
+timestamp [ns]
+1750070967817000000          0
+1750070967867000000          1
+1750070967917000000          2
+1750070967967000000          3
+1750070968017000000          4
+</pre></div></div>
+</div>
+<p>We should take a moment to understand the format of the <code class="docutils literal notranslate"><span class="pre">scanpath.data</span></code>. As we care about getting a scanpath mapped on every single video-frame, we create it as a dataframe of dataframes. As such, every row carries both the timestamp as well as the frame index of the underlying video and saves a dataframe in the <code class="docutils literal notranslate"><span class="pre">fixations</span></code> cell. In this dataframe, every present fixation is provided with an id, coordinates and a fixation status, as seen below. The benefit of treating is a dataframe is the
+possibility to use intuitive pandas indexing, allowing us, for example, to get a list of fixations at frame 2000.</p>
+<p>As a quirk of Neon taking some time to start up, the first frames will usually not yield any usable results. Still, we carry them for consistency.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># print fixations when column frame_idx is 1334. Frame_idx is not the idx of the dataframe, but the index of the video frame.</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">scanpath</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">scanpath</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;frame_idx&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">2000</span><span class="p">,</span> <span class="s2">&quot;fixations&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+   fixation id gaze x [px] gaze y [px] fixation status
+0          174  903.107571  428.153429          during
+1          173  924.962036  437.257629         tracked
+2          172  922.353638  493.392975         tracked
+3          171  960.446289  465.010101         tracked
+4          170  835.920654  440.765076         tracked
+5          169  833.580444  467.248718         tracked
+6          168   698.10437  662.543335         tracked
+7          167  693.992065  630.123047         tracked
+8          166  713.760315  561.713867         tracked
+9          165  543.353333  473.653381         tracked
+10         164  698.986816   486.05957         tracked
+11         163  704.265442  439.653992         tracked
+12         162  750.842773  539.532349         tracked
+</pre></div></div>
+</div>
+</section>
+<hr class="docutils" />
+<section id="4.-Understanding-Fixation-Status">
+<h2>4. Understanding Fixation Status<a class="headerlink" href="#4.-Understanding-Fixation-Status" title="Link to this heading">#</a></h2>
+<p>Each fixation is assigned a status that indicates its lifecycle:</p>
+<ul class="simple">
+<li><p><strong>start</strong>: first frame of fixation</p></li>
+<li><p><strong>during</strong>: intermediate frames of fixation</p></li>
+<li><p><strong>end</strong>: last frame of fixation</p></li>
+<li><p><strong>tracked</strong>: Optical flow algorithm tracks fixation</p></li>
+<li><p><strong>lost</strong>: Tracking is lost, fixation is no longer tracked and gets dropped</p></li>
+</ul>
+</section>
+<hr class="docutils" />
+<section id="5.-Overlaying-Fixations-on-the-Video">
+<h2>5. Overlaying Fixations on the Video<a class="headerlink" href="#5.-Overlaying-Fixations-on-the-Video" title="Link to this heading">#</a></h2>
+<p>Now that we have the scanpath, we can overlay the gaze fixations on the video. This creates a video output with overlaid fixations, where:</p>
+<ul class="simple">
+<li><p>A <strong>blue dot</strong> represents the current gaze location.</p></li>
+<li><p><strong>Green dots</strong> represent tracked fixations.</p></li>
+<li><p>A <strong>red dot</strong> indicates no fixation (saccades or blinks).</p></li>
+</ul>
+<p>Further, we draw connecting lines between past fixations to show the scanpath for the current video. The show_video option creates a live-output of the video rendering, but also increases the runtime.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Overlay the scanpath on the video and show the output</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyneon.vis</span><span class="w"> </span><span class="kn">import</span> <span class="n">overlay_scanpath</span>
+
+<span class="n">overlay_scanpath</span><span class="p">(</span>
+    <span class="n">recording</span><span class="o">.</span><span class="n">scene_video</span><span class="p">,</span>
+    <span class="n">scanpath</span><span class="o">.</span><span class="n">data</span><span class="p">,</span>
+    <span class="n">circle_radius</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+    <span class="n">line_thickness</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+    <span class="n">text_size</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+    <span class="n">max_fixations</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+    <span class="n">show_video</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">output_path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Loading saved scanpath from C:\Users\jan-gabriel.hartel\Documents\GitHub\PyNeon\data\Artworks\Timeseries Data + Scene Video\artworks-9a141750\derivatives\scanpath.pkl
+Overlay video already exists at C:\Users\jan-gabriel.hartel\Documents\GitHub\PyNeon\data\Artworks\Timeseries Data + Scene Video\artworks-9a141750\derivatives\scanpath.mp4; skipping render.
+`show_video=True` has no effect because rendering was skipped.
+</pre></div></div>
+</div>
+</section>
+<hr class="docutils" />
+<section id="Summary">
+<h2>Summary<a class="headerlink" href="#Summary" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p><strong>Mapping Gaze to Video</strong>: We used the <code class="docutils literal notranslate"><span class="pre">map_gaze_to_video</span></code> method to match gaze data with video frames based on timestamps.</p></li>
+<li><p><strong>Estimating Scanpath</strong>: The scanpath was estimated using <code class="docutils literal notranslate"><span class="pre">pyneon.video.estimate_scanpath</span></code>, which tracks fixations and uses optical flow to follow past fixations across scene changes.</p></li>
+<li><p><strong>Overlaying Fixations</strong>: The fixations were visualized on the video by calling <code class="docutils literal notranslate"><span class="pre">pyneon.vis.overlay_scanpath</span></code>.</p></li>
+</ul>
+<p>This workflow can be used to process eye-tracking data, align it with video frames, and visualize gaze movements within video recordings.</p>
+</section>
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="surface_mapping.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Surface Mapping Using Fiducial Markers and Screen Corners</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="export_to_bids.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Exporting to BIDS Formats</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#Setup:-Loading-a-Neon-Recording">Setup: Loading a Neon Recording</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#Mapping-Gaze-Data-to-Video-Frames">Mapping Gaze Data to Video Frames</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#3.-Estimating-the-Scanpath">3. Estimating the Scanpath</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#4.-Understanding-Fixation-Status">4. Understanding Fixation Status</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#5.-Overlaying-Fixations-on-the-Video">5. Overlaying Fixations on the Video</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#Summary">Summary</a></li>
+</ul>
+  </nav></div>
+
+  <div class="sidebar-secondary-item">
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/tutorials/video.ipynb.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2024-2026, PyNeon developers.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 9.1.0.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.1.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>
